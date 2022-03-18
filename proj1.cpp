@@ -9,20 +9,23 @@ int main (int argc, char* argv[]) {
         return 0;
     }
 
-    double lambda_h = atof(argv[1]);
-    double lambda_m = atof(argv[2]);
-    double lambda_l = atof(argv[3]);
+    // Mean intrarrival tim
+    double lambda_h = atof(argv[1]); // high-priority
+    double lambda_m = atof(argv[2]); // medium-priority
+    double lambda_l = atof(argv[3]); // low-priority
     
-    double mu_e = atof(argv[4]);
-    double mu_h = atof(argv[5]);
-    double mu_m = atof(argv[6]);
-    double mu_l = atof(argv[7]);
-    double mu_c = atof(argv[8]);
+    // Mean times
+    double mu_e = atof(argv[4]); // initial evaluation
+    double mu_h = atof(argv[5]); // high-priority
+    double mu_m = atof(argv[6]); // medium-priority
+    double mu_l = atof(argv[7]); // low-priority
+    double mu_c = atof(argv[8]); // cleaning 
 
-    int capacity = atoi(argv[9]);
-    int r_servers = atoi(argv[10]);
-    int m1_servers = atoi(argv[11]);
-    int m2_servers = atoi(argv[12]);
+    // Servers
+    int capacity = atoi(argv[9]); // maximum capacity
+    int r_servers = atoi(argv[10]); // rooms
+    int m1_servers = atoi(argv[11]); // triage nurse 
+    int m2_servers = atoi(argv[12]); // janitors
 
     int seed = atoi(argv[13]);
 
