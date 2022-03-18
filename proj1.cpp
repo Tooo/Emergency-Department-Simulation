@@ -9,12 +9,12 @@ int main (int argc, char* argv[]) {
         return 0;
     }
 
-    // Mean intrarrival tim
+    // Arrival rate
     double lambda_h = atof(argv[1]); // high-priority
     double lambda_m = atof(argv[2]); // medium-priority
     double lambda_l = atof(argv[3]); // low-priority
     
-    // Mean times
+    // Service rate
     double mu_e = atof(argv[4]); // initial evaluation
     double mu_h = atof(argv[5]); // high-priority
     double mu_m = atof(argv[6]); // medium-priority
