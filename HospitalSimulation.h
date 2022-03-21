@@ -1,4 +1,3 @@
-#include <Queue.h>
 
 class HospitalSimulation {
     private:
@@ -8,6 +7,8 @@ class HospitalSimulation {
         void arriveEmergency();
         void startEmergency();
         void departEmergency();
+        void startCleaning();
+        void endCleaning();
     public:
         void startSimulation();
 };
