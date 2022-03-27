@@ -9,8 +9,17 @@ class QueueManager {
         std::priority_queue<Patient, std::vector<Patient>, ComparePatient> medium_queue;
         std::priority_queue<Patient, std::vector<Patient>, ComparePatient> low_queue;
         std::priority_queue<EventNode, std::vector<EventNode>, CompareEventNode> event_queue;
+
+        double lambda_l;
+        double lambda_m;
+        double lambda_h;
+
+        double mu_l;
+        double mu_m;
+        double mu_h;
+
     public:
-        void intializeEQueue();
+        void intializeEQueue(double lambda_l, double lambda_m, double lambda_h, double mu_l, double mu_m, double mu_h);
         void enqueueEQueue(Patient patient);
         Patient dequeueEQueue();
 
