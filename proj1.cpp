@@ -1,6 +1,9 @@
 #include <iostream> 
 using namespace std;
 
+#include "PatientManager.h"
+#include "HospitalSimulation.h"
+
 int main (int argc, char* argv[]) {
 
     // ./proj1 lambda_h lambda_m lambda_l mu_e mu_h mu_m mu_l mu_c B R m1 m2 S
@@ -28,6 +31,10 @@ int main (int argc, char* argv[]) {
     int m2_servers = atoi(argv[12]); // janitors
 
     int seed = atoi(argv[13]);
+
+    srand(seed);
+    
+    PatientManager patient_manager = PatientManager(lambda_h, lambda_m, lambda_l, mu_h, mu_m, mu_l, mu_e, mu_c);
 
 
 }
