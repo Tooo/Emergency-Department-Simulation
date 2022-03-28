@@ -1,6 +1,10 @@
 #include "PatientManager.h"
 #include <random>
 
+PatientManager::PatientManager() {
+
+}
+
 PatientManager::PatientManager(double lambda_h, double lambda_m, double lambda_l, 
                                double mu_h, double mu_m, double mu_l, 
                                double mu_evaluation, double mu_cleaning) {
