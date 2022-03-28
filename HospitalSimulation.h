@@ -1,7 +1,8 @@
 #include "PatientManager.h"
 #include "QueueManager.h"
 
-
+#ifndef HOSPITALSIMULATION_H_
+#define HOSPITALSIMULATION_H_
 class HospitalSimulation {
     private:
         PatientManager patient_manager;
@@ -22,3 +23,4 @@ class HospitalSimulation {
         HospitalSimulation(PatientManager patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers);
         void start();
 };
+#endif

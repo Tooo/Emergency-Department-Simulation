@@ -1,5 +1,7 @@
 #include "Patient.h"
 
+#ifndef PATIENTMANAGER_H_
+#define PATIENTMANAGER_H_
 class PatientManager {
     private:
         double lambda_priority[3];
@@ -16,3 +18,4 @@ class PatientManager {
         Patient getNextPatient();
         
 };
+#endif

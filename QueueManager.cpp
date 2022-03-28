@@ -1,4 +1,6 @@
 #include "QueueManager.h"
+#include "Patient.h"
+#include "EventNode.h"
 
 void QueueManager::enqueuePQueue(Patient patient) {
 

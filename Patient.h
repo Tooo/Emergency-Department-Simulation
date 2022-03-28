@@ -1,3 +1,5 @@
+#ifndef PATIENT_H
+#define PATIENT_H
 enum class Priority {HIGH, MEDIUM, LOW};
 
 class Patient {
@@ -15,3 +17,4 @@ class ComparePatient {
     public:
         bool operator()(Patient & n1, Patient & n2);
 };
+#endif

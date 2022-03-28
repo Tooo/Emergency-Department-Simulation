@@ -19,7 +19,7 @@ PatientManager::PatientManager(double lambda_h, double lambda_m, double lambda_l
     this->mu_evaluation = mu_evaluation;
     this->mu_cleaning = mu_cleaning;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         this->last_arrival_time[i] = getExponentialDistribution(lambda_priority[i]);
     }
 }
@@ -28,7 +28,7 @@ int PatientManager::getNextPriority() {
     int min = 0;
     int min_index = 0;
 
-    for (int i = 1; i < 2; i++) {
+    for (int i = 1; i < 3; i++) {
         if (this->last_arrival_time[i] < min) {
             min = last_arrival_time[i];
             min_index = i;
