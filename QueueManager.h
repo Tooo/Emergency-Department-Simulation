@@ -4,7 +4,6 @@
 
 class QueueManager {
     private:
-        std::priority_queue<Patient, std::vector<Patient>, ComparePatient> e_queue;
         std::priority_queue<Patient, std::vector<Patient>, ComparePatient> high_queue;
         std::priority_queue<Patient, std::vector<Patient>, ComparePatient> medium_queue;
         std::priority_queue<Patient, std::vector<Patient>, ComparePatient> low_queue;
@@ -19,10 +18,6 @@ class QueueManager {
         double mu_h;
 
     public:
-        void intializeEQueue(double lambda_l, double lambda_m, double lambda_h, double mu_l, double mu_m, double mu_h);
-        void enqueueEQueue(Patient patient);
-        Patient dequeueEQueue();
-
         void enqueuePQueue(Patient patient);
         Patient dequeuePQueue();
 
