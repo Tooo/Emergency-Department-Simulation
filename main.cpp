@@ -35,7 +35,7 @@ int main (int argc, char* argv[]) {
 
     srand(seed);
     
-    PatientManager patient_manager = PatientManager(lambda_h, lambda_m, lambda_l, mu_h, mu_m, mu_l, mu_e, mu_c);
+    PatientManager* patient_manager = new PatientManager(lambda_h, lambda_m, lambda_l, mu_h, mu_m, mu_l, mu_e, mu_c);
     HospitalSimulation* simulation = new HospitalSimulation(patient_manager, capacity, r_servers, m1_servers, m2_servers);
 
     simulation->start();
