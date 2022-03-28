@@ -1,26 +1,5 @@
 #include "QueueManager.h"
 
-void QueueManager::intializeEQueue(double lambda_l, double lambda_m, double lambda_h, double mu_l, double mu_m, double mu_h) {
-
-    this->lambda_l = lambda_l;
-    this->lambda_m = lambda_m;
-    this->lambda_h = lambda_h;
-
-    this->mu_l = mu_l;
-    this->mu_m = mu_m;
-    this->mu_h = mu_h;
-}
-
-void QueueManager::enqueueEQueue(Patient patient) {
-    e_queue.push(patient);
-}
-
-Patient QueueManager::dequeueEQueue() {
-    Patient p =  e_queue.top();
-    e_queue.pop();
-    return p;
-}
-
 void QueueManager::enqueuePQueue(Patient patient) {
 
     switch(patient.priority){
