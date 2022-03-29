@@ -1,5 +1,6 @@
 #include "HospitalSimulation.h"
 #include <iostream>
+
 using namespace std;
 
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
@@ -11,36 +12,98 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
     this->m2_servers = m2_servers;
 }
 
-void HospitalSimulation::arriveEvaluation() {
 
+/*
+***** Patient Arrives for Evaluation
+*/
+void HospitalSimulation::arriveEvaluation(Patient p) {
+
+    double time;
+    Event nextEvent = Event::START_EVALUATION;
+
+    EventNode newEvent(time, nextEvent, p);
+    
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startEvaluation() {
+/*
+***** Patient Starts Evaluation
+*/
+void HospitalSimulation::startEvaluation(Patient p) {
 
+    double time;
+    Event nextEvent = Event::DEPART_EVALUATION;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    EventNode newEvent();
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::departEvaluation() {
+/*
+***** Patient Departs Evaluation
+*/
+void HospitalSimulation::departEvaluation(Patient p) {
 
+    double time;
+    Event nextEvent = Event::ARRIVE_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    EventNode newEvent();
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::arriveEmergency() {
+void HospitalSimulation::arriveEmergency(Patient p) {
 
+    double time;
+    Event nextEvent = Event::START_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startEmergency() {
+void HospitalSimulation::startEmergency(Patient p) {
 
+    double time;
+    Event nextEvent = Event::DEPART_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::departEmergency() {
+void HospitalSimulation::departEmergency(Patient p) {
 
+    double time;
+    Event nextEvent = Event::START_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startCleaning() {
+void HospitalSimulation::startCleaning(Patient p) {
 
+    double time;
+    Event nextEvent = Event::END_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::endCleaning() {
+void HospitalSimulation::endCleaning(Patient p) {
 
+    double time;
+    Event nextEvent = Event::END_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
 void HospitalSimulation::start() {
@@ -54,5 +117,30 @@ void HospitalSimulation::start() {
         cout << " Evaluation: " << patient.evaluation_time;
         cout << " Clean: " << patient.cleanup_time;
         cout << endl;
+    }
+    
+    while(){
+        EventNode current_event = queue_manager->dequeueEventQueue();
+
+        switch(current_event.event_type){
+
+            case Event::ARRIVE_EVALUATION:
+                arriveEvaluation();
+            case Event::START_EVALUATION:
+                startEvaluation();
+            case Event::DEPART_EVALUATION:
+                departEvaluation();
+            case Event::ARRIVE_EMERGENCY:
+                arriveEmergency();
+            case Event::START_EMERGENCY:
+                startEmergency();
+            case Event::DEPART_EMERGENCY:
+                departEmergency();
+            case Event::START_CLEAN:
+                startCleaning();
+            case Event::END_CLEAN:
+                endCleaning();
+        }
+
     }
 }
