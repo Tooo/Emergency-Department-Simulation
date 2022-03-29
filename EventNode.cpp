@@ -4,7 +4,7 @@ EventNode::EventNode() {
     
 }
 
-EventNode::EventNode(double event_time, Event event_type, Patient patient) {
+EventNode::EventNode(double event_time, Event event_type, Patient* patient) {
     this->event_time = event_time;
     this->event_type = event_type;
     this->patient = patient;

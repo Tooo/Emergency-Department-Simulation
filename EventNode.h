@@ -9,10 +9,10 @@ enum class Event {ARRIVE_EVALUATION, START_EVALUATION, DEPART_EVALUATION,
 class EventNode {
     public:
         EventNode();
-        EventNode(double event_time, Event event_type, Patient patient);
+        EventNode(double event_time, Event event_type, Patient* patient);
         double event_time;
         Event event_type;
-        Patient patient;
+        Patient* patient;
 };
 
 class CompareEventNode {
