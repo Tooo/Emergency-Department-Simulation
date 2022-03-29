@@ -42,7 +42,7 @@ double PatientManager::getExponentialDistribution(double value) {
     return (-log(1-u) / value);
 }
 
-Patient* PatientManager::getNextPatient() {
+Patient PatientManager::getNextPatient() {
     int priority = getNextPriority();
     int id = id_count++;
     double arrival_time = last_arrival_time[priority];
@@ -50,5 +50,5 @@ Patient* PatientManager::getNextPatient() {
     double service_time = getExponentialDistribution(this->mu_priority[priority]);
     double evaluation_time = getExponentialDistribution(this->mu_evaluation);
     double clean_time = getExponentialDistribution(this->mu_cleaning);
-    return new Patient(id, arrival_time, evaluation_time, service_time, clean_time, (Priority)priority);
+    return Patient(id, arrival_time, evaluation_time, service_time, clean_time, (Priority)priority);
 } 
