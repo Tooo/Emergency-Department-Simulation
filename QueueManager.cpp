@@ -56,6 +56,10 @@ Patient QueueManager::dequeuePQueue() {
     return patient;
 }
 
+bool QueueManager::isEmptyPQueue() {
+    return (low_queue.empty() && medium_queue.empty() && high_queue.empty() );
+}
+
 void QueueManager::enqueueEventQueue(EventNode event_node) {
     event_queue.push(event_node);
 }
