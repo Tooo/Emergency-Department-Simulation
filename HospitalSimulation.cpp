@@ -59,6 +59,9 @@ void HospitalSimulation::departEvaluation(Patient p) {
     queue_manager->enqueueEventQueue(newEvent);
 }
 
+/*
+***** Patient Arrives for Emergency
+*/
 void HospitalSimulation::arriveEmergency(Patient p) {
 
     double time;
@@ -69,6 +72,9 @@ void HospitalSimulation::arriveEmergency(Patient p) {
     queue_manager->enqueueEventQueue(newEvent);
 }
 
+/*
+***** Patient Starts Emergency
+*/
 void HospitalSimulation::startEmergency(Patient p) {
 
     double time;
@@ -79,6 +85,9 @@ void HospitalSimulation::startEmergency(Patient p) {
     queue_manager->enqueueEventQueue(newEvent);
 }
 
+/*
+***** Patient Departs Emergency
+*/
 void HospitalSimulation::departEmergency(Patient p) {
 
     double time;
@@ -89,6 +98,9 @@ void HospitalSimulation::departEmergency(Patient p) {
     queue_manager->enqueueEventQueue(newEvent);
 }
 
+/*
+***** Room Starts Cleaning with Patient P waiting
+*/
 void HospitalSimulation::startCleaning(Patient p) {
 
     double time;
@@ -99,6 +111,9 @@ void HospitalSimulation::startCleaning(Patient p) {
     queue_manager->enqueueEventQueue(newEvent);
 }
 
+/*
+***** Room finishes cleaning with Patient P waiting
+*/
 void HospitalSimulation::endCleaning(Patient p) {
 
     double time;
@@ -127,7 +142,7 @@ void HospitalSimulation::start() {
         Patient p = current_event.patient;
 
         current_time = current_event.event_time;
-        
+
         switch(current_event.event_type){
             
             case Event::ARRIVE_EVALUATION:
