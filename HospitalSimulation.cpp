@@ -20,12 +20,20 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
     // Next Arrival
     Patient* next_patient = patient_manager->getNextPatient();
     double next_time = next_patient->arrival_time;
-    EventNode next_arrival (next_time, Event::ARRIVE_EVALUATION, next_patient);
-    queue_manager->enqueueEventQueue(next_arrival);
+    queue_manager->enqueueEventQueue(next_time, Event::ARRIVE_EVALUATION, next_patient);
 
+    if (stats_manager->patient_hospital_count < capacity) {
+        if (m1_servers > 0) {
+            double event_time = current_time;
+            queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, patient);
+        } else {
+            queue_manager->enqueueEQueue(*patient);
+        }
 
-
-
+    } else {
+        stats_manager->patient_transfered_count++;
+        delete patient;
+    }
 }
 
 /*
@@ -36,10 +44,7 @@ void HospitalSimulation::startEvaluation(Patient* patient) {
     double time = 0;
     Event nextEvent = Event::DEPART_EVALUATION;
 
-    EventNode newEvent(time, nextEvent, patient);
-
-
-    queue_manager->enqueueEventQueue(newEvent);
+    queue_manager->enqueueEventQueue(time, nextEvent, patient);
 }
 
 /*
