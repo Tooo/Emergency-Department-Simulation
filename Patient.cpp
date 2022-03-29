@@ -8,7 +8,7 @@ Patient::Patient(double arrival_time, double evaluation_time, double service_tim
     this->arrival_time = arrival_time;
     this->evaluation_time = evaluation_time;
     this->service_time = service_time;
-    this->cleanup_time = service_time;
+    this->cleanup_time = cleanup_time;
     this->priority = priority;
 }
 
