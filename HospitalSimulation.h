@@ -1,6 +1,16 @@
+#include "PatientManager.h"
+#include "QueueManager.h"
 
+#ifndef HOSPITALSIMULATION_H_
+#define HOSPITALSIMULATION_H_
 class HospitalSimulation {
     private:
+        PatientManager* patient_manager;
+        QueueManager*  queue_manager;
+        int capacity;
+        int r_servers;
+        int m1_servers;
+        int m2_servers;
         void arriveEvaluation();
         void startEvaluation();
         void departEvaluation();
@@ -10,5 +20,7 @@ class HospitalSimulation {
         void startCleaning();
         void endCleaning();
     public:
-        void startSimulation();
+        HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers);
+        void start();
 };
+#endif
