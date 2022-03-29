@@ -11,14 +11,14 @@ class HospitalSimulation {
         int r_servers;
         int m1_servers;
         int m2_servers;
-        void arriveEvaluation();
-        void startEvaluation();
-        void departEvaluation();
-        void arriveEmergency();
-        void startEmergency();
-        void departEmergency();
-        void startCleaning();
-        void endCleaning();
+        void arriveEvaluation(Patient p);
+        void startEvaluation(Patient p);
+        void departEvaluation(Patient p);
+        void arriveEmergency(Patient p);
+        void startEmergency(Patient p);
+        void departEmergency(Patient p);
+        void startCleaning(Patient p);
+        void endCleaning(Patient p);
     public:
         HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers);
         void start();
