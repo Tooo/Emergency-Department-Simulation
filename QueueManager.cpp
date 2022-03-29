@@ -2,6 +2,16 @@
 #include "Patient.h"
 #include "EventNode.h"
 
+void QueueManager::enqueueEQueue(Patient patient) {
+    e_queue.push(patient);
+}
+
+Patient QueueManager::dequeueEQueue() {
+    Patient patient = e_queue.front();
+    e_queue.pop();
+    return patient;
+}
+
 void QueueManager::enqueuePQueue(Patient patient) {
 
     switch (patient.priority) {
@@ -27,22 +37,21 @@ Patient QueueManager::dequeuePQueue() {
 
     //return null if all are empty
     if (!high_queue.empty()){
-        patient = high_queue.top();
+        patient = high_queue.front();
         high_queue.pop();
     }
     else if (!medium_queue.empty()){
-        patient = medium_queue.top();
+        patient = medium_queue.front();
         medium_queue.pop();
     }
     else if (!low_queue.empty()){
-        patient = low_queue.top();
+        patient = low_queue.front();
         low_queue.pop();
     }
 
     return patient;
 }
 
-//need to check for node validity?
 void QueueManager::enqueueEventQueue(EventNode event_node) {
     event_queue.push(event_node);
 }
@@ -54,4 +63,14 @@ EventNode QueueManager::dequeueEventQueue() {
         event_queue.pop();
     }
     return event;
+}
+
+void QueueManager::enqueueCleanQueue(Patient patient) {
+    clean_queue.push(patient);
+}
+
+Patient QueueManager::dequeueCleanQueue() {
+    Patient patient = clean_queue.front();
+    e_queue.pop();
+    return patient;
 }
