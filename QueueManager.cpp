@@ -12,6 +12,10 @@ Patient QueueManager::dequeueEQueue() {
     return patient;
 }
 
+bool QueueManager::isEmptyEQueue() {
+    return e_queue.empty();
+}
+
 void QueueManager::enqueuePQueue(Patient patient) {
 
     switch (patient.priority) {

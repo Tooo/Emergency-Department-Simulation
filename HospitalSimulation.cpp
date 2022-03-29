@@ -10,6 +10,8 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
     this->r_servers = r_servers;
     this->m1_servers = m1_servers;
     this->m2_servers = m2_servers;
+    current_time = 0;
+    closing_time = 1440; //24hrs is 1440min
 }
 
 
@@ -54,16 +56,18 @@ void HospitalSimulation::startEvaluation(Patient* patient) {
 /*
     Patient Departs Evaluation
   - Increment e_room
+  - Enqueue arrive_em
   - If e waiting patient -> enqueue e_start
 */
 void HospitalSimulation::departEvaluation(Patient* patient) {
+    m1_servers++;
 
-    double time = 0;
-    Event nextEvent = Event::ARRIVE_EMERGENCY;
+    queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_EMERGENCY, patient);
 
-    EventNode newEvent(time, nextEvent, patient);
-
-    queue_manager->enqueueEventQueue(newEvent);
+    if (queue_manager->isEmptyEQueue()) {
+        Patient waiting_patient = queue_manager->dequeueEQueue();
+        queue_manager->enqueueEventQueue(current_time, Event::START_EVALUATION, &waiting_patient);
+    }
 }
 
 /*
@@ -72,30 +76,28 @@ void HospitalSimulation::departEvaluation(Patient* patient) {
   - Else enqueue PQueue
 */
 void HospitalSimulation::arriveEmergency(Patient* patient) {
-
-    double time = 0;
-    Event nextEvent = Event::START_EMERGENCY;
-
-    EventNode newEvent(time, nextEvent, patient);
-
-    queue_manager->enqueueEventQueue(newEvent);
+    if (r_servers > 0) {
+        queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, patient);
+    } else {
+        queue_manager->enqueuePQueue(*patient);
+    }
 }
 
 /*
-***** Patient Starts Emergency
+    Patient Starts Emergency
+  - Decrement em_rooms
+  - Enqueue depart_em event
 */
 void HospitalSimulation::startEmergency(Patient* patient) {
-
-    double time = 0;
-    Event nextEvent = Event::DEPART_EMERGENCY;
-
-    EventNode newEvent(time, nextEvent, patient);
-
-    queue_manager->enqueueEventQueue(newEvent);
+    r_servers--; 
+    double event_time = current_time+patient->service_time;
+    queue_manager->enqueueEventQueue(event_time, Event::DEPART_EMERGENCY, patient);
 }
 
 /*
-***** Patient Departs Emergency
+    Patient Departs Emergency
+  - Increment em_rooms
+  - Enqueue 
 */
 void HospitalSimulation::departEmergency(Patient* patient) {
 
@@ -110,27 +112,23 @@ void HospitalSimulation::departEmergency(Patient* patient) {
 /*
 ***** Room Starts Cleaning with Patient P waiting
 */
-void HospitalSimulation::startCleaning(Patient* patient) {
+void HospitalSimulation::arriveClean(Patient* patient) {
 
-    double time = 0;
-    Event nextEvent = Event::END_CLEAN;
+}
 
-    EventNode newEvent(time, nextEvent, patient);
 
-    queue_manager->enqueueEventQueue(newEvent);
+/*
+***** Room Starts Cleaning with Patient P waiting
+*/
+void HospitalSimulation::startClean(Patient* patient) {
+
 }
 
 /*
 ***** Room finishes cleaning with Patient P waiting
 */
-void HospitalSimulation::endCleaning(Patient* patient) {
+void HospitalSimulation::departClean(Patient* patient) {
 
-    double time = 0;
-    Event nextEvent = Event::END_CLEAN;
-
-    EventNode newEvent(time, nextEvent, patient);
-
-    queue_manager->enqueueEventQueue(newEvent);
 }
 
 void PrintPatient(Patient* patient) {
@@ -156,7 +154,8 @@ void HospitalSimulation::start() {
         current_time = current_event.event_time;
 
         switch(current_event.event_type){
-            
+            case Event::PRINT_STATS:
+                break;
             case Event::ARRIVE_EVALUATION:
                 arriveEvaluation(patient);
                 break;
@@ -175,11 +174,14 @@ void HospitalSimulation::start() {
             case Event::DEPART_EMERGENCY:
                 departEmergency(patient);
                 break;
-            case Event::START_CLEAN:
-                startCleaning(patient);
+            case Event::ARRIVE_CLEAN:
+                arriveClean(patient);
                 break;
-            case Event::END_CLEAN:
-                endCleaning(patient);
+            case Event::START_CLEAN:
+                startClean(patient);
+                break;
+            case Event::DEPART_CLEAN:
+                departClean(patient);
                 break;
         }
 

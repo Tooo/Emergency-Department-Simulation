@@ -16,6 +16,7 @@ class QueueManager {
     public:
         void enqueueEQueue(Patient patient);
         Patient dequeueEQueue();
+        bool isEmptyEQueue();
 
         void enqueuePQueue(Patient patient);
         Patient dequeuePQueue();
