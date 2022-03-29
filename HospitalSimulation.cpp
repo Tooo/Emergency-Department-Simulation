@@ -121,25 +121,25 @@ void HospitalSimulation::start() {
     
     while(){
         EventNode current_event = queue_manager->dequeueEventQueue();
-
+        Patient p = current_event.patient;
         switch(current_event.event_type){
 
             case Event::ARRIVE_EVALUATION:
-                arriveEvaluation();
+                arriveEvaluation(p);
             case Event::START_EVALUATION:
-                startEvaluation();
+                startEvaluation(p);
             case Event::DEPART_EVALUATION:
-                departEvaluation();
+                departEvaluation(p);
             case Event::ARRIVE_EMERGENCY:
-                arriveEmergency();
+                arriveEmergency(p);
             case Event::START_EMERGENCY:
-                startEmergency();
+                startEmergency(p);
             case Event::DEPART_EMERGENCY:
-                departEmergency();
+                departEmergency(p);
             case Event::START_CLEAN:
-                startCleaning();
+                startCleaning(p);
             case Event::END_CLEAN:
-                endCleaning();
+                endCleaning(p);
         }
 
     }
