@@ -21,6 +21,7 @@ class QueueManager {
         Patient dequeuePQueue();
 
         void enqueueEventQueue(EventNode event_node);
+        void enqueueEventQueue(double event_time, Event event_type, Patient* patient);
         EventNode dequeueEventQueue();
 
         void enqueueCleanQueue(Patient patient);

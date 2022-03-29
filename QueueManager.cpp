@@ -56,6 +56,11 @@ void QueueManager::enqueueEventQueue(EventNode event_node) {
     event_queue.push(event_node);
 }
 
+void QueueManager::enqueueEventQueue(double event_time, Event event_type, Patient* patient) {
+    EventNode event_node(event_time, event_type, patient);
+    event_queue.push(event_node);
+}
+
 EventNode QueueManager::dequeueEventQueue() {
     EventNode event;
     if(!event_queue.empty()){
