@@ -3,6 +3,9 @@
 
 using namespace std;
 
+double current_time = 0;
+double closing_time = 1440; //24hrs is 1440min
+
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
     this->patient_manager = patient_manager;
     this->queue_manager = new QueueManager();
@@ -119,11 +122,14 @@ void HospitalSimulation::start() {
         cout << endl;
     }
     
-    while(){
+    while(current_time < closing_time){
         EventNode current_event = queue_manager->dequeueEventQueue();
         Patient p = current_event.patient;
-        switch(current_event.event_type){
 
+        current_time = current_event.event_time;
+        
+        switch(current_event.event_type){
+            
             case Event::ARRIVE_EVALUATION:
                 arriveEvaluation(p);
             case Event::START_EVALUATION:
