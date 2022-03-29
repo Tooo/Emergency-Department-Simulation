@@ -14,7 +14,11 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
 
 
 /*
-***** Patient Arrives for Evaluation
+    Patient Arrives for Evaluation
+  - Enqueue next arrival
+  - If Hospital full -> transfer patient 
+  - If e_rooms avaliable -> Enqueue start_e event 
+  - Else Enqueue EQueue
 */
 void HospitalSimulation::arriveEvaluation(Patient* patient) {
     // Next Arrival
@@ -37,18 +41,20 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
 }
 
 /*
-***** Patient Starts Evaluation
+    Patient Starts Evaluation
+  - Decrement e_room
+  - Enqueue depart_e event
 */
 void HospitalSimulation::startEvaluation(Patient* patient) {
-
-    double time = 0;
-    Event nextEvent = Event::DEPART_EVALUATION;
-
-    queue_manager->enqueueEventQueue(time, nextEvent, patient);
+    m1_servers--;
+    double event_time = current_time+patient->evaluation_time;
+    queue_manager->enqueueEventQueue(event_time, Event::DEPART_EVALUATION, patient);
 }
 
 /*
-***** Patient Departs Evaluation
+    Patient Departs Evaluation
+  - Increment e_room
+  - If e waiting patient -> enqueue e_start
 */
 void HospitalSimulation::departEvaluation(Patient* patient) {
 
@@ -61,7 +67,9 @@ void HospitalSimulation::departEvaluation(Patient* patient) {
 }
 
 /*
-***** Patient Arrives for Emergency
+    Patient Arrives for Emergency
+  - If room avaliable -> em_start
+  - Else enqueue PQueue
 */
 void HospitalSimulation::arriveEmergency(Patient* patient) {
 
