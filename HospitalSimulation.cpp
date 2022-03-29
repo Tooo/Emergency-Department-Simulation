@@ -21,7 +21,7 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
 */
 void HospitalSimulation::arriveEvaluation(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::START_EVALUATION;
 
     EventNode newEvent(time, nextEvent, p);
@@ -34,12 +34,11 @@ void HospitalSimulation::arriveEvaluation(Patient p) {
 */
 void HospitalSimulation::startEvaluation(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::DEPART_EVALUATION;
 
     EventNode newEvent(time, nextEvent, p);
 
-    EventNode newEvent();
 
     queue_manager->enqueueEventQueue(newEvent);
 }
@@ -49,12 +48,10 @@ void HospitalSimulation::startEvaluation(Patient p) {
 */
 void HospitalSimulation::departEvaluation(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::ARRIVE_EMERGENCY;
 
     EventNode newEvent(time, nextEvent, p);
-
-    EventNode newEvent();
 
     queue_manager->enqueueEventQueue(newEvent);
 }
@@ -64,7 +61,7 @@ void HospitalSimulation::departEvaluation(Patient p) {
 */
 void HospitalSimulation::arriveEmergency(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::START_EMERGENCY;
 
     EventNode newEvent(time, nextEvent, p);
@@ -77,7 +74,7 @@ void HospitalSimulation::arriveEmergency(Patient p) {
 */
 void HospitalSimulation::startEmergency(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::DEPART_EMERGENCY;
 
     EventNode newEvent(time, nextEvent, p);
@@ -90,7 +87,7 @@ void HospitalSimulation::startEmergency(Patient p) {
 */
 void HospitalSimulation::departEmergency(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::START_CLEAN;
 
     EventNode newEvent(time, nextEvent, p);
@@ -103,7 +100,7 @@ void HospitalSimulation::departEmergency(Patient p) {
 */
 void HospitalSimulation::startCleaning(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::END_CLEAN;
 
     EventNode newEvent(time, nextEvent, p);
@@ -116,7 +113,7 @@ void HospitalSimulation::startCleaning(Patient p) {
 */
 void HospitalSimulation::endCleaning(Patient p) {
 
-    double time;
+    double time = 0;
     Event nextEvent = Event::END_CLEAN;
 
     EventNode newEvent(time, nextEvent, p);
