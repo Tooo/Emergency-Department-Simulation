@@ -1,6 +1,10 @@
 #include "HospitalSimulation.h"
 #include <iostream>
+
 using namespace std;
+
+double current_time = 0;
+double closing_time = 1440; //24hrs is 1440min
 
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
     this->patient_manager = patient_manager;
@@ -11,36 +15,110 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
     this->m2_servers = m2_servers;
 }
 
-void HospitalSimulation::arriveEvaluation() {
 
+/*
+***** Patient Arrives for Evaluation
+*/
+void HospitalSimulation::arriveEvaluation(Patient p) {
+
+    double time = 0;
+    Event nextEvent = Event::START_EVALUATION;
+
+    EventNode newEvent(time, nextEvent, p);
+    
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startEvaluation() {
+/*
+***** Patient Starts Evaluation
+*/
+void HospitalSimulation::startEvaluation(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::DEPART_EVALUATION;
+
+    EventNode newEvent(time, nextEvent, p);
+
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::departEvaluation() {
+/*
+***** Patient Departs Evaluation
+*/
+void HospitalSimulation::departEvaluation(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::ARRIVE_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::arriveEmergency() {
+/*
+***** Patient Arrives for Emergency
+*/
+void HospitalSimulation::arriveEmergency(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::START_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startEmergency() {
+/*
+***** Patient Starts Emergency
+*/
+void HospitalSimulation::startEmergency(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::DEPART_EMERGENCY;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::departEmergency() {
+/*
+***** Patient Departs Emergency
+*/
+void HospitalSimulation::departEmergency(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::START_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::startCleaning() {
+/*
+***** Room Starts Cleaning with Patient P waiting
+*/
+void HospitalSimulation::startCleaning(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::END_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
-void HospitalSimulation::endCleaning() {
+/*
+***** Room finishes cleaning with Patient P waiting
+*/
+void HospitalSimulation::endCleaning(Patient p) {
 
+    double time = 0;
+    Event nextEvent = Event::END_CLEAN;
+
+    EventNode newEvent(time, nextEvent, p);
+
+    queue_manager->enqueueEventQueue(newEvent);
 }
 
 void HospitalSimulation::start() {
@@ -54,5 +132,33 @@ void HospitalSimulation::start() {
         cout << " Evaluation: " << patient.evaluation_time;
         cout << " Clean: " << patient.cleanup_time;
         cout << endl;
+    }
+    
+    while(current_time < closing_time){
+        EventNode current_event = queue_manager->dequeueEventQueue();
+        Patient p = current_event.patient;
+
+        current_time = current_event.event_time;
+
+        switch(current_event.event_type){
+            
+            case Event::ARRIVE_EVALUATION:
+                arriveEvaluation(p);
+            case Event::START_EVALUATION:
+                startEvaluation(p);
+            case Event::DEPART_EVALUATION:
+                departEvaluation(p);
+            case Event::ARRIVE_EMERGENCY:
+                arriveEmergency(p);
+            case Event::START_EMERGENCY:
+                startEmergency(p);
+            case Event::DEPART_EMERGENCY:
+                departEmergency(p);
+            case Event::START_CLEAN:
+                startCleaning(p);
+            case Event::END_CLEAN:
+                endCleaning(p);
+        }
+
     }
 }
