@@ -33,8 +33,8 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
             double event_time = current_time;
             queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, *patient);
         } else {
-            queue_manager->enqueueEQueue(*patient);
             patient->waited_e = true;
+            queue_manager->enqueueEQueue(*patient);
         }
 
     } else {
@@ -83,8 +83,8 @@ void HospitalSimulation::arriveEmergency(Patient* patient) {
     if (r_servers > 0) {
         queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, *patient);
     } else {
-        queue_manager->enqueuePQueue(*patient);
         patient->waited_p = true;
+        queue_manager->enqueuePQueue(*patient);
     }
 }
 
@@ -96,7 +96,7 @@ void HospitalSimulation::arriveEmergency(Patient* patient) {
 void HospitalSimulation::startEmergency(Patient* patient) {
     r_servers--; 
     if (patient->waited_p) {
-        stats_manager->total_waiting_p[(int)patient->priority] = current_time - patient->arrival_emergency;
+        patient->waiting_p = current_time - patient->arrival_emergency;
     }
     double event_time = current_time + patient->service_time;
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_EMERGENCY, *patient);
