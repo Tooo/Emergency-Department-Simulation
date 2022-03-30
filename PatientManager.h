@@ -4,6 +4,7 @@
 #define PATIENTMANAGER_H_
 class PatientManager {
     private:
+        int id_count;
         double lambda_priority[3];
         double mu_priority[3];
         double last_arrival_time[3];

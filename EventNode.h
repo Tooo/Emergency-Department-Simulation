@@ -2,9 +2,16 @@
 
 #ifndef EVENTNODE_H_
 #define EVENTNODE_H_
-enum class Event {ARRIVE_EVALUATION, START_EVALUATION, DEPART_EVALUATION, 
-                  ARRIVE_EMERGENCY, START_EMERGENCY, DEPART_EMERGENCY,
-                  START_CLEAN, END_CLEAN};
+enum class Event {  PRINT_STATS,
+                    ARRIVE_EVALUATION, 
+                    START_EVALUATION, 
+                    DEPART_EVALUATION, 
+                    ARRIVE_EMERGENCY, 
+                    START_EMERGENCY, 
+                    DEPART_EMERGENCY,
+                    ARRIVE_CLEAN, 
+                    START_CLEAN,
+                    DEPART_CLEAN};
 
 class EventNode {
     public:

@@ -1,164 +1,196 @@
 #include "HospitalSimulation.h"
-#include <iostream>
-
-using namespace std;
-
-double current_time = 0;
-double closing_time = 1440; //24hrs is 1440min
 
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
     this->patient_manager = patient_manager;
     this->queue_manager = new QueueManager();
+    this->stats_manager = new StatsManager();
     this->capacity = capacity;
     this->r_servers = r_servers;
     this->m1_servers = m1_servers;
     this->m2_servers = m2_servers;
+    current_time = 0;
+    closing_time = 1440; //24hrs is 1440min
 }
 
 
 /*
-***** Patient Arrives for Evaluation
+    Patient Arrives for Evaluation
+  - Enqueue next arrival
+  - If Hospital full -> transfer patient 
+  - If e_rooms avaliable -> Enqueue start_e event 
+  - Else Enqueue EQueue
 */
-void HospitalSimulation::arriveEvaluation(Patient p) {
+void HospitalSimulation::arriveEvaluation(Patient* patient) {
+    //stats_manager->printPatient(patient);
+    // Next Arrival
+    Patient next_patient = patient_manager->getNextPatient();
+    double next_time = next_patient.arrival_time;
+    queue_manager->enqueueEventQueue(next_time, Event::ARRIVE_EVALUATION, next_patient);
 
-    double time = 0;
-    Event nextEvent = Event::START_EVALUATION;
+    if (stats_manager->patient_hospital_count < capacity) {
+        stats_manager->patient_hospital_count++;
+        if (m1_servers > 0) {
+            double event_time = current_time;
+            queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, *patient);
+        } else {
+            queue_manager->enqueueEQueue(*patient);
+        }
 
-    EventNode newEvent(time, nextEvent, p);
-    
-    queue_manager->enqueueEventQueue(newEvent);
+    } else {
+        stats_manager->patient_transfered_count++;
+    }
 }
 
 /*
-***** Patient Starts Evaluation
+    Patient Starts Evaluation
+  - Decrement e_room
+  - Enqueue depart_e event
 */
-void HospitalSimulation::startEvaluation(Patient p) {
-
-    double time = 0;
-    Event nextEvent = Event::DEPART_EVALUATION;
-
-    EventNode newEvent(time, nextEvent, p);
-
-
-    queue_manager->enqueueEventQueue(newEvent);
+void HospitalSimulation::startEvaluation(Patient* patient) {
+    m1_servers--;
+    double event_time = current_time+patient->evaluation_time;
+    queue_manager->enqueueEventQueue(event_time, Event::DEPART_EVALUATION, *patient);
 }
 
 /*
-***** Patient Departs Evaluation
+    Patient Departs Evaluation
+  - Increment e_room
+  - Enqueue arrive_em
+  - If e waiting patient -> enqueue e_start
 */
-void HospitalSimulation::departEvaluation(Patient p) {
+void HospitalSimulation::departEvaluation(Patient* patient) {
+    m1_servers++;
 
-    double time = 0;
-    Event nextEvent = Event::ARRIVE_EMERGENCY;
+    queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_EMERGENCY, *patient);
 
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+    if (!queue_manager->isEmptyEQueue()) {
+        Patient waiting_patient = queue_manager->dequeueEQueue();
+        queue_manager->enqueueEventQueue(current_time, Event::START_EVALUATION, waiting_patient);
+    }
 }
 
 /*
-***** Patient Arrives for Emergency
+    Patient Arrives for Emergency
+  - If room avaliable -> em_start
+  - Else enqueue PQueue
 */
-void HospitalSimulation::arriveEmergency(Patient p) {
-
-    double time = 0;
-    Event nextEvent = Event::START_EMERGENCY;
-
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+void HospitalSimulation::arriveEmergency(Patient* patient) {
+    if (r_servers > 0) {
+        queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, *patient);
+    } else {
+        queue_manager->enqueuePQueue(*patient);
+    }
 }
 
 /*
-***** Patient Starts Emergency
+    Patient Starts Emergency
+  - Decrement em_rooms
+  - Enqueue depart_em event
 */
-void HospitalSimulation::startEmergency(Patient p) {
-
-    double time = 0;
-    Event nextEvent = Event::DEPART_EMERGENCY;
-
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+void HospitalSimulation::startEmergency(Patient* patient) {
+    r_servers--; 
+    double event_time = current_time+patient->service_time;
+    queue_manager->enqueueEventQueue(event_time, Event::DEPART_EMERGENCY, *patient);
 }
 
 /*
-***** Patient Departs Emergency
+    Patient Departs Emergency
+  - Increment em_rooms
+  - Enqueue arrive_clean
+  - If p waiting patient -> enqueue e_start
 */
-void HospitalSimulation::departEmergency(Patient p) {
+void HospitalSimulation::departEmergency(Patient* patient) {
+    r_servers++;
+    queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
+    stats_manager->total_departure++;
+    stats_manager->patient_hospital_count--;
 
-    double time = 0;
-    Event nextEvent = Event::START_CLEAN;
-
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+    if (!queue_manager->isEmptyPQueue()) {
+        Patient waiting_patient = queue_manager->dequeuePQueue();
+        queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, waiting_patient);
+    }
 }
 
 /*
-***** Room Starts Cleaning with Patient P waiting
+    Room Avaliable to Clean
+  - If room avaliable -> clean_start
+  - Else enqueue CleanQueue
 */
-void HospitalSimulation::startCleaning(Patient p) {
+void HospitalSimulation::arriveClean(Patient* patient) {
+    if (m2_servers > 0) {
+        queue_manager->enqueueEventQueue(current_time, Event::START_CLEAN, *patient);
+    } else {
+        queue_manager->enqueueCleanQueue(*patient);
+    }
+}
 
-    double time = 0;
-    Event nextEvent = Event::END_CLEAN;
 
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+/*
+    Room Starts Cleaning
+  - Decrement m2_rooms
+  - Enqueue depart_clean event
+*/
+void HospitalSimulation::startClean(Patient* patient) {
+    m2_servers--; 
+    double event_time = current_time+patient->clean_time;
+    queue_manager->enqueueEventQueue(event_time, Event::DEPART_CLEAN, *patient);
 }
 
 /*
-***** Room finishes cleaning with Patient P waiting
+    Room Finish Cleaning
+  - Increment em_rooms
+  - Patient leaves
 */
-void HospitalSimulation::endCleaning(Patient p) {
-
-    double time = 0;
-    Event nextEvent = Event::END_CLEAN;
-
-    EventNode newEvent(time, nextEvent, p);
-
-    queue_manager->enqueueEventQueue(newEvent);
+void HospitalSimulation::departClean(Patient* patient) {
+    m2_servers++;
 }
 
 void HospitalSimulation::start() {
+    queue_manager->intializeEventQueue();
 
-    for (int i = 0; i < 10; i++) {
-        Patient patient = patient_manager->getNextPatient();
-        cout << "P" << i;
-        cout << " Priority: " << int(patient.priority);
-        cout << " Arrival: " << patient.arrival_time;
-        cout << " Service: " << patient.service_time;
-        cout << " Evaluation: " << patient.evaluation_time;
-        cout << " Clean: " << patient.cleanup_time;
-        cout << endl;
-    }
+    Patient patient = patient_manager->getNextPatient();
+    EventNode current_event = EventNode(patient.arrival_time, Event::ARRIVE_EVALUATION, patient);
+    queue_manager->enqueueEventQueue(current_event);
     
     while(current_time < closing_time){
-        EventNode current_event = queue_manager->dequeueEventQueue();
-        Patient p = current_event.patient;
+        current_event = queue_manager->dequeueEventQueue();
+        patient = current_event.patient;
 
         current_time = current_event.event_time;
 
         switch(current_event.event_type){
-            
+            case Event::PRINT_STATS:
+                stats_manager->printReport(current_time);
+                break;
             case Event::ARRIVE_EVALUATION:
-                arriveEvaluation(p);
+                arriveEvaluation(&patient);
+                break;
             case Event::START_EVALUATION:
-                startEvaluation(p);
+                startEvaluation(&patient);
+                break;
             case Event::DEPART_EVALUATION:
-                departEvaluation(p);
+                departEvaluation(&patient);
+                break;
             case Event::ARRIVE_EMERGENCY:
-                arriveEmergency(p);
+                arriveEmergency(&patient);
+                break;
             case Event::START_EMERGENCY:
-                startEmergency(p);
+                startEmergency(&patient);
+                break;
             case Event::DEPART_EMERGENCY:
-                departEmergency(p);
+                departEmergency(&patient);
+                break;
+            case Event::ARRIVE_CLEAN:
+                arriveClean(&patient);
+                break;
             case Event::START_CLEAN:
-                startCleaning(p);
-            case Event::END_CLEAN:
-                endCleaning(p);
+                startClean(&patient);
+                break;
+            case Event::DEPART_CLEAN:
+                departClean(&patient);
+                break;
         }
 
     }
+    stats_manager->printReport(1444);
 }

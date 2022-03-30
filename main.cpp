@@ -34,6 +34,11 @@ int main (int argc, char* argv[]) {
     int seed = atoi(argv[13]);
 
     srand(seed);
+
+    cout << "Simulating Major Hospital Emergency Department" << endl;
+    printf("Lambda_h: %f, Lambda_m: %f, Lambda_l: %f \n", lambda_h, lambda_m, lambda_l);
+    printf("Mu_e: %f, Mu_h: %f, Mu_m: %f, Mu_l: %f, Mu_c: %f \n", mu_e, mu_h, mu_m, mu_l, mu_c);
+    printf("B: %d, R: %d, m1: %d, m2: %d, S: %d \n", capacity, r_servers, m1_servers, m2_servers, seed);
     
     PatientManager* patient_manager = new PatientManager(lambda_h, lambda_m, lambda_l, mu_h, mu_m, mu_l, mu_e, mu_c);
     HospitalSimulation* simulation = new HospitalSimulation(patient_manager, capacity, r_servers, m1_servers, m2_servers);

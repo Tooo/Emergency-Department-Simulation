@@ -5,11 +5,12 @@ enum class Priority {HIGH, MEDIUM, LOW};
 class Patient {
     public:
         Patient();
-        Patient(double arrival_time, double evaluation_time, double service_time, double cleanup_time, Priority priority); 
+        Patient(int id, double arrival_time, double evaluation_time, double service_time, double clean_time, Priority priority); 
+        int id;
         double arrival_time;
         double evaluation_time;
         double service_time;
-        double cleanup_time;
+        double clean_time;
         Priority priority;
 };
 

@@ -4,11 +4,12 @@ Patient::Patient() {
     
 }
 
-Patient::Patient(double arrival_time, double evaluation_time, double service_time, double cleanup_time, Priority priority) {
+Patient::Patient(int id, double arrival_time, double evaluation_time, double service_time, double clean_time, Priority priority) {
+    this->id = id;
     this->arrival_time = arrival_time;
     this->evaluation_time = evaluation_time;
     this->service_time = service_time;
-    this->cleanup_time = cleanup_time;
+    this->clean_time = clean_time;
     this->priority = priority;
 }
 

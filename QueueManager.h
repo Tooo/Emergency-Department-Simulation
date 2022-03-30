@@ -6,16 +6,28 @@
 #define QUEUEMANAGER_H_
 class QueueManager {
     private:
-        std::priority_queue<Patient, std::vector<Patient>, ComparePatient> high_queue;
-        std::priority_queue<Patient, std::vector<Patient>, ComparePatient> medium_queue;
-        std::priority_queue<Patient, std::vector<Patient>, ComparePatient> low_queue;
+        std::queue<Patient> e_queue;
+        std::queue<Patient> high_queue;
+        std::queue<Patient> medium_queue;
+        std::queue<Patient> low_queue;
+        std::queue<Patient> clean_queue;
         std::priority_queue<EventNode, std::vector<EventNode>, CompareEventNode> event_queue;
 
     public:
+        void enqueueEQueue(Patient patient);
+        Patient dequeueEQueue();
+        bool isEmptyEQueue();
+
         void enqueuePQueue(Patient patient);
         Patient dequeuePQueue();
+        bool isEmptyPQueue();
 
+        void intializeEventQueue();
         void enqueueEventQueue(EventNode event_node);
+        void enqueueEventQueue(double event_time, Event event_type, Patient patient);
         EventNode dequeueEventQueue();
+
+        void enqueueCleanQueue(Patient patient);
+        Patient dequeueCleanQueue();
 };
 #endif
