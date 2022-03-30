@@ -21,7 +21,7 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
   - Else Enqueue EQueue
 */
 void HospitalSimulation::arriveEvaluation(Patient* patient) {
-    stats_manager->printPatient(patient);
+    //stats_manager->printPatient(patient);
     // Next Arrival
     Patient next_patient = patient_manager->getNextPatient();
     double next_time = next_patient.arrival_time;
