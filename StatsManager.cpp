@@ -107,7 +107,12 @@ void StatsManager::printReport(double current_time) {
         }
     }
     cout << endl;
-    cout << "Average cleanup time: " << total_clean_time / total_clean_count << endl;
+    cout << "Average cleanup time: ";
+     if (total_clean_count == 0) {
+        cout << "N/A" << endl;
+    } else {
+        cout << total_clean_time / total_clean_count << endl;
+    }
     cout << "Number of patients who leave because of full capacity: " << patient_transfered_count << endl;
     cout << endl;
 }
