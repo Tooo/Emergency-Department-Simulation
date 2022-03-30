@@ -63,13 +63,13 @@ void StatsManager::printReport(double current_time) {
 
     cout << "Simulation at " << hour << abbr << endl;
     cout << "Number of Departures: " << departure_count_all << endl;
-    cout << "Average number of patients in system: " << endl;
+    cout << "Average number of patients in system: "<< total_response_all/current_time << endl;
     
     cout << "Average response time - All: ";
     if (departure_count_all == 0) {
         cout << "N/A";
     } else {
-        cout << total_response_all/departure_count_all << endl;
+        cout << total_response_all/departure_count_all;
     }
 
     char letter[3] = {'H', 'M', 'L'};
@@ -87,10 +87,26 @@ void StatsManager::printReport(double current_time) {
     if (departure_count_all == 0) {
         cout << "N/A" << endl;
     } else {
-        cout << total_waiting_e << endl;
+        cout << total_waiting_e/departure_count_all << endl;
     }
-    cout << "Average waiting time in P queue - All: " << " H:" << " M:" << " L:" << endl;
-    cout << "Average cleanup time" << endl;
+
+    cout << "Average waiting time in P queue - All: ";
+    if (departure_count_all == 0) {
+        cout << "N/A";
+    } else {
+        cout << total_waiting_p_all/departure_count_all;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        printf(" %c: ", letter[i]);
+        if (departure_count[i] == 0) {
+            cout << "N/A";
+        } else {
+            cout << total_waiting_p[i]/departure_count[i];
+        }
+    }
+    cout << endl;
+    cout << "Average cleanup time: " << endl;
     cout << "Number of patients who leave because of full capacity: " << patient_transfered_count << endl;
     cout << endl;
 }
