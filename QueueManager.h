@@ -22,6 +22,7 @@ class QueueManager {
         Patient dequeuePQueue();
         bool isEmptyPQueue();
 
+        void intializeEventQueue();
         void enqueueEventQueue(EventNode event_node);
         void enqueueEventQueue(double event_time, Event event_type, Patient patient);
         EventNode dequeueEventQueue();

@@ -60,6 +60,12 @@ bool QueueManager::isEmptyPQueue() {
     return (low_queue.empty() && medium_queue.empty() && high_queue.empty());
 }
 
+void QueueManager::intializeEventQueue() {
+    for (int i = 60; i < 1440; i+= 60) {
+        enqueueEventQueue(i, Event::PRINT_STATS, Patient());
+    }
+}
+
 void QueueManager::enqueueEventQueue(EventNode event_node) {
     event_queue.push(event_node);
 }
