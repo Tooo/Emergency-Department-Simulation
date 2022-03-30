@@ -15,6 +15,8 @@ class Patient {
         double clean_time;
         double waiting_e;
         double waiting_p;
+        bool waited_e;
+        bool waited_p;
 };
 
 class ComparePatient {
