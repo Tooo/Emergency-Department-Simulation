@@ -2,6 +2,17 @@
 #include <iostream>
 using namespace std;
 
+StatsManager::StatsManager() {
+    total_departure = 0;
+    patient_hospital_count = 0;
+    total_cleanup = 0;
+    patient_transfered_count = 0;
+    for (int i = 0; i < 3; i++) {
+        waiting_e[i] = 0;
+        waiting_p[i] = 0;
+    }
+}
+
 void StatsManager::printPatient(Patient* patient) {
     cout << "P" << patient->id;
     cout << " Priority: " << int(patient->priority);
