@@ -9,12 +9,12 @@ class StatsManager {
     private: 
         int getTime(string& abbr, double current_time);
     public:
-        int total_departure;
+        int departure_count[3];
         int patient_hospital_count;
-        
-        double waiting_e[3];
-        double waiting_p[3];
-        double total_cleanup;
+        double total_response_time[3];
+        double total_waiting_e;
+        double total_waiting_p[3];
+        double total_clean_time;
         int patient_transfered_count;
 
         StatsManager();

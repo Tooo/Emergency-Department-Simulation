@@ -7,11 +7,13 @@ class Patient {
         Patient();
         Patient(int id, double arrival_time, double evaluation_time, double service_time, double clean_time, Priority priority); 
         int id;
+        Priority priority;
         double arrival_time;
         double evaluation_time;
         double service_time;
         double clean_time;
-        Priority priority;
+        double waiting_e;
+        double waiting_p;
 };
 
 class ComparePatient {

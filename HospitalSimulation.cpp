@@ -49,6 +49,7 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
 void HospitalSimulation::startEvaluation(Patient* patient) {
     m1_servers--;
     double event_time = current_time+patient->evaluation_time;
+    patient->waiting_e = event_time - patient->arrival_time;
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_EVALUATION, *patient);
 }
 
@@ -90,6 +91,7 @@ void HospitalSimulation::arriveEmergency(Patient* patient) {
 void HospitalSimulation::startEmergency(Patient* patient) {
     r_servers--; 
     double event_time = current_time+patient->service_time;
+    stats_manager->total_waiting_p[(int)patient->priority] = current_time - patient->arrival_time - patient->waiting_e - patient->evaluation_time; 
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_EMERGENCY, *patient);
 }
 
@@ -102,8 +104,13 @@ void HospitalSimulation::startEmergency(Patient* patient) {
 void HospitalSimulation::departEmergency(Patient* patient) {
     r_servers++;
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
-    stats_manager->total_departure++;
+    
+    int priority = (int)patient->priority;
+    stats_manager->departure_count[priority]++;
     stats_manager->patient_hospital_count--;
+    stats_manager->total_response_time[priority] += current_time - patient->arrival_time;
+    stats_manager->total_waiting_e += patient->waiting_e;
+    stats_manager->total_waiting_p[priority] += patient->waiting_p;
 
     if (!queue_manager->isEmptyPQueue()) {
         Patient waiting_patient = queue_manager->dequeuePQueue();
@@ -123,7 +130,6 @@ void HospitalSimulation::arriveClean(Patient* patient) {
         queue_manager->enqueueCleanQueue(*patient);
     }
 }
-
 
 /*
     Room Starts Cleaning

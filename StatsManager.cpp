@@ -3,13 +3,14 @@
 using namespace std;
 
 StatsManager::StatsManager() {
-    total_departure = 0;
     patient_hospital_count = 0;
-    total_cleanup = 0;
+    total_waiting_e = 0;
+    total_clean_time = 0;
     patient_transfered_count = 0;
     for (int i = 0; i < 3; i++) {
-        waiting_e[i] = 0;
-        waiting_p[i] = 0;
+        departure_count[i] = 0;
+        total_response_time[i] = 0;
+        total_waiting_p[i] = 0;
     }
 }
 
@@ -46,12 +47,48 @@ void StatsManager::printReport(double current_time) {
     if (current_time == 1444) {
       cout << "End of ";  
     }
+    
+    int departure_count_all = 0;
+    double total_response_all = 0;
+    double total_waiting_p_all = 0;
+
+    double avg_response_times[3];
+
+    for (int i = 0; i < 3; i++) {
+        departure_count_all += departure_count[i];
+        total_response_all += total_response_time[i];
+        total_waiting_p_all += total_waiting_p[i];
+        avg_response_times[i] = total_response_time[i]/departure_count[i];
+    } 
 
     cout << "Simulation at " << hour << abbr << endl;
-    cout << "Number of Departures: " << total_departure << endl;
+    cout << "Number of Departures: " << departure_count_all << endl;
     cout << "Average number of patients in system: " << endl;
-    cout << "Average response time - All: " << " H:" << " M:" << " L:" << endl;
-    cout << "Average waiting time in E queue: " << endl;
+    
+    cout << "Average response time - All: ";
+    if (departure_count_all == 0) {
+        cout << "N/A";
+    } else {
+        cout << total_response_all/departure_count_all << endl;
+    }
+
+    char letter[3] = {'H', 'M', 'L'};
+    for (int i = 0; i < 3; i++) {
+        printf(" %c: ", letter[i]);
+        if (departure_count[i] == 0) {
+            cout << "N/A";
+        } else {
+            cout << avg_response_times[i];
+        }
+    }
+    cout << endl;
+
+    cout << "Average waiting time in E queue: ";
+    if (departure_count_all == 0) {
+        cout << "N/A" << endl;
+    } else {
+        cout << total_waiting_e << endl;
+    }
     cout << "Average waiting time in P queue - All: " << " H:" << " M:" << " L:" << endl;
     cout << "Average cleanup time" << endl;
     cout << "Number of patients who leave because of full capacity: " << patient_transfered_count << endl;
