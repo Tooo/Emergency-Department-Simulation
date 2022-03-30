@@ -1,6 +1,4 @@
 #include "HospitalSimulation.h"
-#include <iostream>
-using namespace std;
 
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
     this->patient_manager = patient_manager;
@@ -23,6 +21,7 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
   - Else Enqueue EQueue
 */
 void HospitalSimulation::arriveEvaluation(Patient* patient) {
+    stats_manager->PrintPatient(patient);
     // Next Arrival
     Patient next_patient = patient_manager->getNextPatient();
     double next_time = next_patient.arrival_time;
@@ -144,17 +143,9 @@ void HospitalSimulation::departClean(Patient* patient) {
     m2_servers++;
 }
 
-void PrintPatient(Patient* patient) {
-    cout << "P" << patient->id;
-    cout << " Priority: " << int(patient->priority);
-    cout << " Arrival: " << patient->arrival_time;
-    cout << " Service: " << patient->service_time;
-    cout << " Evaluation: " << patient->evaluation_time;
-    cout << " Clean: " << patient->clean_time;
-    cout << endl;
-}
-
 void HospitalSimulation::start() {
+    queue_manager->intializeEventQueue();
+
     Patient patient = patient_manager->getNextPatient();
     EventNode current_event = EventNode(patient.arrival_time, Event::ARRIVE_EVALUATION, patient);
     queue_manager->enqueueEventQueue(current_event);
@@ -162,12 +153,12 @@ void HospitalSimulation::start() {
     while(current_time < closing_time){
         current_event = queue_manager->dequeueEventQueue();
         patient = current_event.patient;
-        PrintPatient(&patient);
 
         current_time = current_event.event_time;
 
         switch(current_event.event_type){
             case Event::PRINT_STATS:
+                stats_manager->PrintReport(current_time);
                 break;
             case Event::ARRIVE_EVALUATION:
                 arriveEvaluation(&patient);
