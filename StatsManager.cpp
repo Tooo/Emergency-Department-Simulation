@@ -12,6 +12,7 @@ StatsManager::StatsManager() {
         total_response_time[i] = 0;
         total_waiting_p[i] = 0;
     }
+    total_clean_count = 0;
 }
 
 void StatsManager::printPatient(Patient* patient) {
@@ -106,7 +107,7 @@ void StatsManager::printReport(double current_time) {
         }
     }
     cout << endl;
-    cout << "Average cleanup time: " << endl;
+    cout << "Average cleanup time: " << total_clean_time / total_clean_count << endl;
     cout << "Number of patients who leave because of full capacity: " << patient_transfered_count << endl;
     cout << endl;
 }

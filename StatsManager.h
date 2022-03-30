@@ -16,6 +16,7 @@ class StatsManager {
         double total_waiting_p[3];
         double total_clean_time;
         int patient_transfered_count;
+        int total_clean_count;
 
         StatsManager();
         void printPatient(Patient* patient);

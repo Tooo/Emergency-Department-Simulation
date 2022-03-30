@@ -155,6 +155,8 @@ void HospitalSimulation::startClean(Patient* patient) {
   - Patient leaves
 */
 void HospitalSimulation::departClean(Patient* patient) {
+    stats_manager->total_clean_time += patient->clean_time;
+    stats_manager->total_clean_count++;
     m2_servers++;
 }
 
