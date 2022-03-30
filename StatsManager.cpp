@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-void StatsManager::PrintPatient(Patient* patient) {
+void StatsManager::printPatient(Patient* patient) {
     cout << "P" << patient->id;
     cout << " Priority: " << int(patient->priority);
     cout << " Arrival: " << patient->arrival_time;
@@ -12,6 +12,31 @@ void StatsManager::PrintPatient(Patient* patient) {
     cout << endl;
 }
 
-void StatsManager::PrintReport(double current_time) {
-    cout << current_time << endl;
+int StatsManager::getTime(string& abbr, double current_time) {
+    int hour = current_time/60;
+    if (hour < 12 || hour == 24) {
+        if (hour == 24) {
+            hour -= 12;
+        }
+        abbr = "AM";
+    } else {
+        if (hour != 12) {
+            hour -= 12;
+        }
+        abbr = "PM";
+    }
+    return hour;
+}
+
+void StatsManager::printReport(double current_time) {
+    string abbr;
+    int hour = getTime(abbr, current_time);
+
+    if (current_time == 1444) {
+      cout << "End of ";  
+    }
+
+    cout << "Simulation at " << hour << abbr << endl;
+    cout << "Number of Departures: " << total_departure << endl;
+    cout << endl;
 }

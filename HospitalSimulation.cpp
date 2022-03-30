@@ -21,7 +21,7 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
   - Else Enqueue EQueue
 */
 void HospitalSimulation::arriveEvaluation(Patient* patient) {
-    stats_manager->PrintPatient(patient);
+    stats_manager->printPatient(patient);
     // Next Arrival
     Patient next_patient = patient_manager->getNextPatient();
     double next_time = next_patient.arrival_time;
@@ -102,6 +102,7 @@ void HospitalSimulation::startEmergency(Patient* patient) {
 void HospitalSimulation::departEmergency(Patient* patient) {
     r_servers++;
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
+    stats_manager->total_departure++;
 
     if (!queue_manager->isEmptyPQueue()) {
         Patient waiting_patient = queue_manager->dequeuePQueue();
@@ -158,7 +159,7 @@ void HospitalSimulation::start() {
 
         switch(current_event.event_type){
             case Event::PRINT_STATS:
-                stats_manager->PrintReport(current_time);
+                stats_manager->printReport(current_time);
                 break;
             case Event::ARRIVE_EVALUATION:
                 arriveEvaluation(&patient);
@@ -190,4 +191,5 @@ void HospitalSimulation::start() {
         }
 
     }
+    stats_manager->printReport(1444);
 }
