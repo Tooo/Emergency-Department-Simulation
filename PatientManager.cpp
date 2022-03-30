@@ -20,12 +20,17 @@ PatientManager::PatientManager(double lambda_h, double lambda_m, double lambda_l
     this->mu_cleaning = mu_cleaning;
 
     for (int i = 0; i < 3; i++) {
-        this->last_arrival_time[i] = getExponentialDistribution(lambda_priority[i]);
+        if (lambda_priority[i] == 0) {
+            this->last_arrival_time[i] = MAXFLOAT;
+        } else {
+            this->last_arrival_time[i] = getExponentialDistribution(lambda_priority[i]);
+        }
+        
     }
 }
 
 int PatientManager::getNextPriority() {
-    int min = last_arrival_time[0];
+    double min = last_arrival_time[0];
     int min_index = 0;
 
     for (int i = 1; i < 3; i++) {
