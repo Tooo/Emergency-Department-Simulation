@@ -28,6 +28,7 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
     queue_manager->enqueueEventQueue(next_time, Event::ARRIVE_EVALUATION, next_patient);
 
     if (stats_manager->patient_hospital_count < capacity) {
+        stats_manager->patient_hospital_count++;
         if (m1_servers > 0) {
             double event_time = current_time;
             queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, *patient);
@@ -37,7 +38,6 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
 
     } else {
         stats_manager->patient_transfered_count++;
-        delete patient;
     }
 }
 
@@ -103,6 +103,7 @@ void HospitalSimulation::departEmergency(Patient* patient) {
     r_servers++;
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
     stats_manager->total_departure++;
+    stats_manager->patient_hospital_count--;
 
     if (!queue_manager->isEmptyPQueue()) {
         Patient waiting_patient = queue_manager->dequeuePQueue();

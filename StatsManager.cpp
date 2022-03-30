@@ -42,7 +42,7 @@ void StatsManager::printReport(double current_time) {
     cout << "Average response time - All: " << " H:" << " M:" << " L:" << endl;
     cout << "Average waiting time in E queue: " << endl;
     cout << "Average waiting time in P queue - All: " << " H:" << " M:" << " L:" << endl;
-    cout << "Average cleanup time";
+    cout << "Average cleanup time" << endl;
     cout << "Number of patients who leave because of full capacity: " << patient_transfered_count << endl;
     cout << endl;
 }
