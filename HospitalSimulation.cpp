@@ -36,8 +36,7 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
         stats_manager->patient_hospital_count++;
 
         if (triage_nurses > 0) {
-            double event_time = current_time;
-            queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, *patient);
+            queue_manager->enqueueEventQueue(current_time, Event::START_EVALUATION, *patient);
         } else {
             patient->waited_e = true;
             queue_manager->enqueueEQueue(*patient);
@@ -121,6 +120,7 @@ void HospitalSimulation::startEmergency(Patient* patient) {
   - Patients leaves (Add stats to stats_manager)
 */
 void HospitalSimulation::departEmergency(Patient* patient) {
+    patient->leave_time = current_time;
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
     
     int priority = (int)patient->priority;
@@ -161,17 +161,23 @@ void HospitalSimulation::startClean(Patient* patient) {
   - Increment rooms
   - Add cleaning stats to stats_manager
   - If p waiting patient -> Enqueue start_em event
+  - If room dirty -> Enqueue start_clean event
 */
 void HospitalSimulation::departClean(Patient* patient) {
     janitors++;
     rooms++;
 
-    stats_manager->total_clean_time += patient->clean_time;
+    stats_manager->total_clean_time += current_time - patient->leave_time;
     stats_manager->total_clean_count++;
 
     if (!queue_manager->isEmptyPQueue()) {
         Patient waiting_patient = queue_manager->dequeuePQueue();
         queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, waiting_patient);
+    }
+
+    if (!queue_manager->isEmptyCleanQueue()) {
+        Patient dirty_room = queue_manager->dequeueCleanQueue();
+        queue_manager->enqueueEventQueue(current_time, Event::START_CLEAN, dirty_room);
     }
 }
 

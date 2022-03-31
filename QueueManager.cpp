@@ -2,6 +2,15 @@
 #include "Patient.h"
 #include "EventNode.h"
 
+QueueManager::QueueManager() {
+    e_queue = {};
+    high_queue = {};
+    medium_queue = {};
+    low_queue = {};
+    clean_queue = {};
+    event_queue = {};
+}
+
 QueueManager::~QueueManager() {
     e_queue = {};
     high_queue = {};
@@ -110,6 +119,10 @@ void QueueManager::enqueueCleanQueue(Patient patient) {
 
 Patient QueueManager::dequeueCleanQueue() {
     Patient patient = clean_queue.front();
-    e_queue.pop();
+    clean_queue.pop();
     return patient;
+}
+
+bool QueueManager::isEmptyCleanQueue() {
+    return clean_queue.empty();
 }

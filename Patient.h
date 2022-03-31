@@ -19,9 +19,12 @@ class Patient {
         Priority priority;
         double arrival_time;
         double evaluation_time;
-        double arrival_emergency;
         double service_time;
         double clean_time;
+
+        double arrival_emergency;
+        double leave_time;
+
         double waiting_e;
         double waiting_p;
         bool waited_e;

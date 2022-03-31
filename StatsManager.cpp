@@ -4,6 +4,7 @@ using namespace std;
 
 StatsManager::StatsManager() {
     patient_hospital_count = 0;
+    accumulated_patient_hospital_count = 0;
     total_waiting_e = 0;
     total_clean_time = 0;
     patient_transfered_count = 0;

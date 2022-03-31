@@ -18,6 +18,7 @@ class StatsManager {
 
         int departure_count[3];
         int patient_hospital_count;
+        int accumulated_patient_hospital_count;
         double total_response_time[3];
         double total_waiting_e;
         double total_waiting_p[3];

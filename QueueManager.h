@@ -19,6 +19,7 @@ class QueueManager {
         std::priority_queue<EventNode, std::vector<EventNode>, CompareEventNode> event_queue;
 
     public:
+        QueueManager();
         ~QueueManager();
 
         // E Queue
@@ -40,5 +41,6 @@ class QueueManager {
         // Clean Queue
         void enqueueCleanQueue(Patient patient);
         Patient dequeueCleanQueue();
+        bool isEmptyCleanQueue();
 };
 #endif
