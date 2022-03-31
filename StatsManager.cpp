@@ -72,22 +72,19 @@ void StatsManager::printReport(double current_time) {
     double total_response_all = 0;
     double total_waiting_p_all = 0;
 
-    double avg_response_times[3];
-
     // Get total of all 3 priorities
     for (int i = 0; i < 3; i++) {
         departure_count_all += departure_count[i];
         total_response_all += total_response_time[i];
         total_waiting_p_all += total_waiting_p[i];
-        avg_response_times[i] = total_response_time[i]/departure_count[i];
     } 
 
     // Number of Departures
     cout << "Number of Departures: " << departure_count_all << endl;
 
     // Average number of patients in system
-    cout << "Average number of patients in system: "<< total_response_all/current_time << endl;
-    
+    cout << "Average number of patients in system: "<< accumulated_patient_hospital_count/current_time << endl;
+
     char letter[3] = {'H', 'M', 'L'};
 
     // Average response time
@@ -103,7 +100,7 @@ void StatsManager::printReport(double current_time) {
         if (departure_count[i] == 0) {
             cout << "N/A";
         } else {
-            cout << avg_response_times[i];
+            cout << total_response_time[i]/departure_count[i];;
         }
     }
     cout << endl;

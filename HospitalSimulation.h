@@ -21,6 +21,7 @@ class HospitalSimulation {
         int triage_nurses;   // m1
         int janitors;        // m2
         double current_time; // time = 0
+        double last_event_time;
         double closing_time; // time = 1440
 
         void arriveEvaluation(Patient* patient);

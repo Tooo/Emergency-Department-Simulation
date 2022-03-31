@@ -10,6 +10,7 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
     this->janitors = janitors;
     
     current_time = 0;
+    last_event_time = 0;
     
     // 24 hours is 1440min
     closing_time = 1440; 
@@ -233,6 +234,10 @@ void HospitalSimulation::start() {
                 departClean(&patient);
                 break;
         }
+
+
+        stats_manager->accumulated_patient_hospital_count += stats_manager->patient_hospital_count * (current_time - last_event_time);
+        last_event_time = current_time;
 
     }
     stats_manager->printReport(1444);
