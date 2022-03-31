@@ -81,4 +81,7 @@ int main (int argc, char* argv[]) {
     HospitalSimulation* simulation = new HospitalSimulation(patient_manager, capacity, r_servers, m1_servers, m2_servers);
 
     simulation->start();
+
+    delete patient_manager;
+    delete simulation;
 }

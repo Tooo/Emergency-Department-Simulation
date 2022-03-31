@@ -2,6 +2,15 @@
 #include "Patient.h"
 #include "EventNode.h"
 
+QueueManager::~QueueManager() {
+    e_queue = {};
+    high_queue = {};
+    medium_queue = {};
+    low_queue = {};
+    clean_queue = {};
+    event_queue = {};
+}
+
 void QueueManager::enqueueEQueue(Patient patient) {
     e_queue.push(patient);
 }

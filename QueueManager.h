@@ -14,6 +14,7 @@ class QueueManager {
         std::priority_queue<EventNode, std::vector<EventNode>, CompareEventNode> event_queue;
 
     public:
+        ~QueueManager();
         void enqueueEQueue(Patient patient);
         Patient dequeueEQueue();
         bool isEmptyEQueue();

@@ -28,6 +28,7 @@ class HospitalSimulation {
         void departClean(Patient* patient);
     public:
         HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers);
+        ~HospitalSimulation();
         void start();
 };
 #endif

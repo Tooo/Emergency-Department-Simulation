@@ -12,6 +12,11 @@ HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capa
     closing_time = 1440; //24hrs is 1440min
 }
 
+HospitalSimulation::~HospitalSimulation() {
+    delete queue_manager;
+    delete stats_manager;
+}
+
 
 /*
     Patient Arrives for Evaluation
