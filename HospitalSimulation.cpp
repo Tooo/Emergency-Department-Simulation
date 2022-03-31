@@ -2,14 +2,17 @@
 
 HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int rooms, int triage_nurses, int janitors) {
     this->patient_manager = patient_manager;
-    this->queue_manager = new QueueManager();
-    this->stats_manager = new StatsManager();
+    queue_manager = new QueueManager();
+    stats_manager = new StatsManager();
     this->capacity = capacity;
     this->rooms = rooms;
     this->triage_nurses = triage_nurses;
     this->janitors = janitors;
+    
     current_time = 0;
-    closing_time = 1440; //24hrs is 1440min
+    
+    // 24 hours is 1440min
+    closing_time = 1440; 
 }
 
 HospitalSimulation::~HospitalSimulation() {
