@@ -2,6 +2,12 @@
 
 #ifndef PATIENTMANAGER_H_
 #define PATIENTMANAGER_H_
+
+/*
+    Patient Manager
+  - Holds to lambda and mu values
+  - Generate patient based on next priority
+*/
 class PatientManager {
     private:
         int id_count;
@@ -16,6 +22,7 @@ class PatientManager {
     public:
         PatientManager();
         PatientManager(double lambda_h, double lambda_m, double lambda_l, double mu_h, double mu_m, double mu_l, double mu_evaluation, double m_cleaning);
+        
         Patient getNextPatient();
         
 };

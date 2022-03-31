@@ -19,6 +19,7 @@ PatientManager::PatientManager(double lambda_h, double lambda_m, double lambda_l
     this->mu_evaluation = mu_evaluation;
     this->mu_cleaning = mu_cleaning;
 
+    // Calculate last_arrival_time of first patient
     for (int i = 0; i < 3; i++) {
         if (lambda_priority[i] == 0) {
             this->last_arrival_time[i] = MAXFLOAT;
@@ -29,6 +30,12 @@ PatientManager::PatientManager(double lambda_h, double lambda_m, double lambda_l
     }
 }
 
+/*
+    Get Next Priority
+  - Get the index
+  - Compares the last_arrival_time of each priority
+  - Returns the minimum's index
+*/
 int PatientManager::getNextPriority() {
     double min = last_arrival_time[0];
     int min_index = 0;
@@ -42,16 +49,29 @@ int PatientManager::getNextPriority() {
     return min_index;
 }
 
+/*
+    Get Exponential Distribution
+  - Calculate using the lambda/mu value
+  - Return the expoential distribution value
+*/
 double PatientManager::getExponentialDistribution(double value) {
     double u = rand() / (RAND_MAX + 1.0);
     return (-log(1-u) / value);
 }
 
+/*
+    Get Next Patient
+  - Get next priority
+  - Calculate times wth expontential distribution
+  - Return patient
+*/
 Patient PatientManager::getNextPatient() {
-    int priority = getNextPriority();
     int id = id_count++;
+    int priority = getNextPriority();
+
     double arrival_time = last_arrival_time[priority];
     last_arrival_time[priority] = arrival_time + getExponentialDistribution(this->lambda_priority[priority]);
+    
     double service_time = getExponentialDistribution(this->mu_priority[priority]);
     double evaluation_time = getExponentialDistribution(this->mu_evaluation);
     double clean_time = getExponentialDistribution(this->mu_cleaning);

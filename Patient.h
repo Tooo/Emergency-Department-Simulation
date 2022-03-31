@@ -1,6 +1,5 @@
 #ifndef PATIENT_H
 #define PATIENT_H
-
 /*
     Priority
   - Enum class for Patient priority
