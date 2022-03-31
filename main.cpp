@@ -6,7 +6,6 @@ using namespace std;
 #include "HospitalSimulation.h"
 
 int main (int argc, char* argv[]) {
-
     // ./proj1 lambda_h lambda_m lambda_l mu_e mu_h mu_m mu_l mu_c B R m1 m2 S
     if (argc < 14) {
         cout << "Insufficient number of arguments provided!" << endl;
@@ -25,23 +24,25 @@ int main (int argc, char* argv[]) {
     double mu_l = atof(argv[7]); // low-priority
     double mu_c = atof(argv[8]); // cleaning 
     
-    if(mu_e <= 0){
+    if (mu_e <= 0) {
         cout << "Invalid evaluation service rate! Service rate must be greater than 0!" << endl;
         return 0;
     }
-    if(lambda_h > 0 && mu_h <= 0){
+
+    if (lambda_h > 0 && mu_h <= 0) {
         cout << "Invalid service rate for arriving high priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
-    if(lambda_l > 0 && mu_l <= 0){
+
+    if (lambda_l > 0 && mu_l <= 0) {
         cout << "Invalid service rate for arriving low priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
-    if(lambda_m > 0 && mu_m <= 0){
+    if (lambda_m > 0 && mu_m <= 0) {
         cout << "Invalid service rate for arriving medium priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
-    if(mu_c <= 0){
+    if (mu_c <= 0) {
         cout << "Invalid cleaning service rate! Service rate must be greater than 0!" << endl;
         return 0;
     }
@@ -52,24 +53,27 @@ int main (int argc, char* argv[]) {
     int m1_servers = atoi(argv[11]); // triage nurse 
     int m2_servers = atoi(argv[12]); // janitors
 
-    if(capacity <= 0){
+    if (capacity <= 0) {
         cout << "Invalid Capacity! Capacity must be greater than 0!" << endl;
         return 0;
     }
-    if(r_servers <= 0){
+
+    if (r_servers <= 0) {
         cout << "Invalid number of rooms! Number of rooms must be greater than 0!" << endl;
         return 0;
     }
-    if(m1_servers <= 0){
+
+    if (m1_servers <= 0) {
         cout << "Invalid number of triage nurses! Number of rooms must be greater than 0!" << endl;
         return 0;
     }
-    if(m2_servers <= 0){
+
+    if (m2_servers <= 0 ){
         cout << "Invalid number of janitors! Number of janitors must be greater than 0!" << endl;
         return 0;
     }
-    int seed = atoi(argv[13]);
 
+    int seed = atoi(argv[13]);
     srand(seed);
 
     cout << "Simulating Major Hospital Emergency Department" << endl;
