@@ -2,6 +2,10 @@
 
 #ifndef EVENTNODE_H_
 #define EVENTNODE_H_
+/*
+    Event
+  - Enum class for each type of event
+*/
 enum class Event {  PRINT_STATS,
                     ARRIVE_EVALUATION, 
                     START_EVALUATION, 
@@ -11,8 +15,13 @@ enum class Event {  PRINT_STATS,
                     DEPART_EMERGENCY,
                     ARRIVE_CLEAN, 
                     START_CLEAN,
-                    DEPART_CLEAN};
+                    DEPART_CLEAN
+};
 
+/*
+    Event Node
+  - Event queue node to hold each event
+*/
 class EventNode {
     public:
         EventNode();
@@ -22,6 +31,10 @@ class EventNode {
         Patient patient;
 };
 
+/*
+    Compare Event Node
+  - Used to compare 2 event nodes for priority queue
+*/
 class CompareEventNode {
     public:
         bool operator()(EventNode & n1, EventNode & n2);
