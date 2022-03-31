@@ -11,9 +11,9 @@ class HospitalSimulation {
         StatsManager* stats_manager;
 
         int capacity;
-        int r_servers;
-        int m1_servers;
-        int m2_servers;
+        int rooms;
+        int triage_nurses;
+        int janitors;
         double current_time;
         double closing_time;
 
@@ -27,7 +27,7 @@ class HospitalSimulation {
         void startClean(Patient* patient);
         void departClean(Patient* patient);
     public:
-        HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers);
+        HospitalSimulation(PatientManager* patient_manager, int capacity, int rooms, int triage_nurses, int janitors);
         ~HospitalSimulation();
         void start();
 };

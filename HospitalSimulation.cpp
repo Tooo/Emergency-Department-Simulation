@@ -1,13 +1,13 @@
 #include "HospitalSimulation.h"
 
-HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int r_servers, int m1_servers, int m2_servers) {
+HospitalSimulation::HospitalSimulation(PatientManager* patient_manager, int capacity, int rooms, int triage_nurses, int janitors) {
     this->patient_manager = patient_manager;
     this->queue_manager = new QueueManager();
     this->stats_manager = new StatsManager();
     this->capacity = capacity;
-    this->r_servers = r_servers;
-    this->m1_servers = m1_servers;
-    this->m2_servers = m2_servers;
+    this->rooms = rooms;
+    this->triage_nurses = triage_nurses;
+    this->janitors = janitors;
     current_time = 0;
     closing_time = 1440; //24hrs is 1440min
 }
@@ -17,24 +17,22 @@ HospitalSimulation::~HospitalSimulation() {
     delete stats_manager;
 }
 
-
 /*
     Patient Arrives for Evaluation
-  - Enqueue next arrival
+  - Enqueue next arrival of next patient
   - If Hospital full -> transfer patient 
-  - If e_rooms avaliable -> Enqueue start_e event 
-  - Else Enqueue EQueue
+  - If triage_nurses avaliable -> Enqueue start_ev event 
+  - Else Enqueue patient to EQueue
 */
 void HospitalSimulation::arriveEvaluation(Patient* patient) {
-    //stats_manager->printPatient(patient);
-    // Next Arrival
     Patient next_patient = patient_manager->getNextPatient();
     double next_time = next_patient.arrival_time;
     queue_manager->enqueueEventQueue(next_time, Event::ARRIVE_EVALUATION, next_patient);
 
     if (stats_manager->patient_hospital_count < capacity) {
         stats_manager->patient_hospital_count++;
-        if (m1_servers > 0) {
+
+        if (triage_nurses > 0) {
             double event_time = current_time;
             queue_manager->enqueueEventQueue(event_time, Event::START_EVALUATION, *patient);
         } else {
@@ -49,26 +47,29 @@ void HospitalSimulation::arriveEvaluation(Patient* patient) {
 
 /*
     Patient Starts Evaluation
-  - Decrement e_room
-  - Enqueue depart_e event
+  - Decrement triage_nurses
+  - If patient waited_e -> calculate waiting_e
+  - Enqueue depart_ev event
 */
 void HospitalSimulation::startEvaluation(Patient* patient) {
-    m1_servers--;
+    triage_nurses--;
+
     if (patient->waited_e) {
         patient->waiting_e = current_time - patient->arrival_time;
     }
+
     double event_time = current_time + patient->evaluation_time;
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_EVALUATION, *patient);
 }
 
 /*
     Patient Departs Evaluation
-  - Increment e_room
+  - Increment triage_nurses
   - Enqueue arrive_em
-  - If e waiting patient -> enqueue e_start
+  - If e waiting patient -> enqueue start_ev
 */
 void HospitalSimulation::departEvaluation(Patient* patient) {
-    m1_servers++;
+    triage_nurses++;
 
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_EMERGENCY, *patient);
 
@@ -80,12 +81,13 @@ void HospitalSimulation::departEvaluation(Patient* patient) {
 
 /*
     Patient Arrives for Emergency
-  - If room avaliable -> em_start
-  - Else enqueue PQueue
+  - If rooms avaliable -> start_em
+  - Else Enqueue patient to PQueue
 */
 void HospitalSimulation::arriveEmergency(Patient* patient) {
     patient->arrival_emergency = current_time;
-    if (r_servers > 0) {
+
+    if (rooms > 0) {
         queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, *patient);
     } else {
         patient->waited_p = true;
@@ -95,26 +97,27 @@ void HospitalSimulation::arriveEmergency(Patient* patient) {
 
 /*
     Patient Starts Emergency
-  - Decrement em_rooms
+  - Decrement rooms
+  - If patient waited_p -> calculate waiting_p
   - Enqueue depart_em event
 */
 void HospitalSimulation::startEmergency(Patient* patient) {
-    r_servers--; 
+    rooms--; 
+
     if (patient->waited_p) {
         patient->waiting_p = current_time - patient->arrival_emergency;
     }
+
     double event_time = current_time + patient->service_time;
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_EMERGENCY, *patient);
 }
 
 /*
     Patient Departs Emergency
-  - Increment em_rooms
-  - Enqueue arrive_clean
-  - If p waiting patient -> enqueue e_start
+  - Enqueue arrive_clean event
+  - Patients leaves (Add stats to stats_manager)
 */
 void HospitalSimulation::departEmergency(Patient* patient) {
-    r_servers++;
     queue_manager->enqueueEventQueue(current_time, Event::ARRIVE_CLEAN, *patient);
     
     int priority = (int)patient->priority;
@@ -123,20 +126,15 @@ void HospitalSimulation::departEmergency(Patient* patient) {
     stats_manager->total_response_time[priority] += current_time - patient->arrival_time;
     stats_manager->total_waiting_e += patient->waiting_e;
     stats_manager->total_waiting_p[priority] += patient->waiting_p;
-
-    if (!queue_manager->isEmptyPQueue()) {
-        Patient waiting_patient = queue_manager->dequeuePQueue();
-        queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, waiting_patient);
-    }
 }
 
 /*
     Room Avaliable to Clean
-  - If room avaliable -> clean_start
-  - Else enqueue CleanQueue
+  - If janitors avaliable -> start_clean
+  - Else Enqueue room to CleanQueue
 */
 void HospitalSimulation::arriveClean(Patient* patient) {
-    if (m2_servers > 0) {
+    if (janitors > 0) {
         queue_manager->enqueueEventQueue(current_time, Event::START_CLEAN, *patient);
     } else {
         queue_manager->enqueueCleanQueue(*patient);
@@ -145,26 +143,42 @@ void HospitalSimulation::arriveClean(Patient* patient) {
 
 /*
     Room Starts Cleaning
-  - Decrement m2_rooms
+  - Decrement janitors
   - Enqueue depart_clean event
 */
 void HospitalSimulation::startClean(Patient* patient) {
-    m2_servers--; 
+    janitors--; 
     double event_time = current_time+patient->clean_time;
     queue_manager->enqueueEventQueue(event_time, Event::DEPART_CLEAN, *patient);
 }
 
 /*
     Room Finish Cleaning
-  - Increment em_rooms
-  - Patient leaves
+  - Increment janitors
+  - Increment rooms
+  - Add cleaning stats to stats_manager
+  - If p waiting patient -> Enqueue start_em event
 */
 void HospitalSimulation::departClean(Patient* patient) {
+    janitors++;
+    rooms++;
+
     stats_manager->total_clean_time += patient->clean_time;
     stats_manager->total_clean_count++;
-    m2_servers++;
+
+    if (!queue_manager->isEmptyPQueue()) {
+        Patient waiting_patient = queue_manager->dequeuePQueue();
+        queue_manager->enqueueEventQueue(current_time, Event::START_EMERGENCY, waiting_patient);
+    }
 }
 
+/*
+    Start Simluation
+  - IntializeEventQueue with stat prints
+  - Get first patient and Enqueue arrive_ev event
+  - While loop for simulation until 24 hours
+  - Print report at 24 hours
+*/
 void HospitalSimulation::start() {
     queue_manager->intializeEventQueue();
 
