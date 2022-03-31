@@ -30,27 +30,44 @@ int main (int argc, char* argv[]) {
         return 0;
     }
     if(lambda_h > 0 && mu_h <= 0){
-        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        cout << "Invalid service rate for arriving high priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
     if(lambda_l > 0 && mu_l <= 0){
-        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        cout << "Invalid service rate for arriving low priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
     if(lambda_m > 0 && mu_m <= 0){
-        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        cout << "Invalid service rate for arriving medium priority patient! Service rate must be greater than 0!" << endl;
         return 0;
     }
     if(mu_c <= 0){
         cout << "Invalid cleaning service rate! Service rate must be greater than 0!" << endl;
         return 0;
     }
+
     // Servers
     int capacity = atoi(argv[9]); // maximum capacity
     int r_servers = atoi(argv[10]); // rooms
     int m1_servers = atoi(argv[11]); // triage nurse 
     int m2_servers = atoi(argv[12]); // janitors
 
+    if(capacity <= 0){
+        cout << "Invalid Capacity! Capacity must be greater than 0!" << endl;
+        return 0;
+    }
+    if(r_servers <= 0){
+        cout << "Invalid number of rooms! Number of rooms must be greater than 0!" << endl;
+        return 0;
+    }
+    if(m1_servers <= 0){
+        cout << "Invalid number of triage nurses! Number of rooms must be greater than 0!" << endl;
+        return 0;
+    }
+    if(m2_servers <= 0){
+        cout << "Invalid number of janitors! Number of janitors must be greater than 0!" << endl;
+        return 0;
+    }
     int seed = atoi(argv[13]);
 
     srand(seed);
