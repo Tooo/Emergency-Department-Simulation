@@ -24,7 +24,27 @@ int main (int argc, char* argv[]) {
     double mu_m = atof(argv[6]); // medium-priority
     double mu_l = atof(argv[7]); // low-priority
     double mu_c = atof(argv[8]); // cleaning 
-
+    
+    if(mu_e <= 0){
+        cout << "Invalid evaluation service rate! Service rate must be greater than 0!" << endl;
+        return 0;
+    }
+    if(lambda_h > 0 && mu_h <= 0){
+        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        return 0;
+    }
+    if(lambda_l > 0 && mu_l <= 0){
+        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        return 0;
+    }
+    if(lambda_m > 0 && mu_m <= 0){
+        cout << "Invalid service rate for arriving patient! Service rate must be greater than 0!" << endl;
+        return 0;
+    }
+    if(mu_c <= 0){
+        cout << "Invalid cleaning service rate! Service rate must be greater than 0!" << endl;
+        return 0;
+    }
     // Servers
     int capacity = atoi(argv[9]); // maximum capacity
     int r_servers = atoi(argv[10]); // rooms
