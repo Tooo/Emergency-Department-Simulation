@@ -11,6 +11,7 @@ QueueManager::~QueueManager() {
     event_queue = {};
 }
 
+// EQueues functions
 void QueueManager::enqueueEQueue(Patient patient) {
     e_queue.push(patient);
 }
@@ -25,10 +26,13 @@ bool QueueManager::isEmptyEQueue() {
     return e_queue.empty();
 }
 
+// PQueues functions
+/*
+    Enqueue PQueue
+  - Queue patient based on priority
+*/
 void QueueManager::enqueuePQueue(Patient patient) {
-
     switch (patient.priority) {
-
         case Priority::HIGH:
             high_queue.push(patient);
             break;
@@ -41,14 +45,15 @@ void QueueManager::enqueuePQueue(Patient patient) {
     }
 }
 
+/*
+    Dequeue PQueue
+  - Dequeue higher priority first
+  - If higher priority are empty, dequeue lower ones
+  - High > Medium > Low
+*/
 Patient QueueManager::dequeuePQueue() {
     Patient patient;
 
-    //check if high is not empty
-    //then if med is not empty
-    //then if low is not empty
-
-    //return null if all are empty
     if (!high_queue.empty()){
         patient = high_queue.front();
         high_queue.pop();
@@ -69,6 +74,11 @@ bool QueueManager::isEmptyPQueue() {
     return (low_queue.empty() && medium_queue.empty() && high_queue.empty());
 }
 
+// Event Queues functions
+/*
+    Intialize Event Queue
+  - Create print events for each hour
+*/
 void QueueManager::intializeEventQueue() {
     for (int i = 60; i < 1440; i+= 60) {
         enqueueEventQueue(i, Event::PRINT_STATS, Patient());
@@ -93,6 +103,7 @@ EventNode QueueManager::dequeueEventQueue() {
     return event;
 }
 
+// Clean Queue Functions
 void QueueManager::enqueueCleanQueue(Patient patient) {
     clean_queue.push(patient);
 }
