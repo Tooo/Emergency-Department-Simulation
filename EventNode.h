@@ -26,6 +26,7 @@ class EventNode {
     public:
         EventNode();
         EventNode(double event_time, Event event_type, Patient patient);
+
         double event_time;
         Event event_type;
         Patient patient;

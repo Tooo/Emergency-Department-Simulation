@@ -55,5 +55,5 @@ Patient PatientManager::getNextPatient() {
     double service_time = getExponentialDistribution(this->mu_priority[priority]);
     double evaluation_time = getExponentialDistribution(this->mu_evaluation);
     double clean_time = getExponentialDistribution(this->mu_cleaning);
-    return Patient(id, arrival_time, evaluation_time, service_time, clean_time, (Priority)priority);
+    return Patient(id, (Priority)priority, arrival_time, evaluation_time, service_time, clean_time);
 } 
